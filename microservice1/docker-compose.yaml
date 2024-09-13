@@ -36,6 +36,7 @@ services:
       - '5672'
     networks:
       - microservice1
+      - network
 
 networks:
   microservice1:
