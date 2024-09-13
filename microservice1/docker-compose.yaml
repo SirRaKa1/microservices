@@ -1,0 +1,44 @@
+services:
+  microservice1:
+    container_name: microservice1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_ms1:5432/db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SERVER_PORT=8090
+    networks:
+      - network
+      - microservice1
+  postgresql:
+    container_name: postgresql_ms1
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - microservice1
+  rabbitmq:
+    container_name: rabbitmq_ms1
+    image: 'rabbitmq:latest'
+    environment:
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+      - 'RABBITMQ_DEFAULT_USER=myuser'
+    ports:
+      - '5672'
+    networks:
+      - microservice1
+
+networks:
+  microservice1:
+    external: false
+  network:
+    external: true
