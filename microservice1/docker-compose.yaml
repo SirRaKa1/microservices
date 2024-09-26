@@ -11,6 +11,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_ms1:5432/db
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - SERVER_PORT=8090
     networks:
       - network
@@ -26,17 +28,6 @@ services:
       - "5432:5432"
     networks:
       - microservice1
-  rabbitmq:
-    container_name: rabbitmq_ms1
-    image: 'rabbitmq:latest'
-    environment:
-      - 'RABBITMQ_DEFAULT_PASS=secret'
-      - 'RABBITMQ_DEFAULT_USER=myuser'
-    ports:
-      - '5672'
-    networks:
-      - microservice1
-      - network
 
 networks:
   microservice1:
