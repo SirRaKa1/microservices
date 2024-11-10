@@ -17,6 +17,8 @@ services:
     networks:
       - network
       - microservice1
+    volumes:
+      - ms1-logs:/opt/app/log
   postgresql:
     container_name: postgresql_ms1
     image: postgres:latest
@@ -28,6 +30,20 @@ services:
       - "5432:5432"
     networks:
       - microservice1
+  filebeat:
+    container_name: filebeat_ms1
+    image: docker.elastic.co/beats/filebeat:8.15.2
+    entrypoint: filebeat -e -strict.perms=false
+    user: root
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ms1-logs:/var/app/log
+    networks:
+      - network
+
+volumes:
+  ms1-logs:
+
 
 networks:
   microservice1:

@@ -25,4 +25,10 @@ public class PingController {
         System.out.println("yay");
         return new ResponseEntity<>("Sup dude", HttpStatus.OK);
     }
+
+    @GetMapping("/other")
+    public ResponseEntity<String> pingOther(){
+        log.info("hello from microservice 1");
+        return new ResponseEntity<>("success",HttpStatus.OK);
+    }
 }

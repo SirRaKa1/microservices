@@ -7,6 +7,7 @@ services:
         - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
       ports:
         - '5672:5672'
+        - '15672:15672'
       networks:
         - network
 

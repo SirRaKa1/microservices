@@ -17,8 +17,8 @@ services:
     networks:
       - network
       - microservice2
-    depends_on:
-      - postgresql
+    volumes:
+      - ms2-logs:/opt/app/log
   postgresql:
     container_name: postgresql_ms2
     image: postgres:latest
@@ -30,7 +30,19 @@ services:
       - "5433:5432"
     networks:
       - microservice2
+  filebeat:
+    container_name: filebeat_ms2
+    image: docker.elastic.co/beats/filebeat:8.15.2
+    entrypoint: filebeat -e -strict.perms=false
+    user: root
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ms2-logs:/var/app/log
+    networks:
+      - network
 
+volumes:
+  ms2-logs:
 
 
 

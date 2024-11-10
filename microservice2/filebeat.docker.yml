@@ -1,0 +1,16 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.inputs:
+  - type: filestream
+    paths:
+      - /var/app/log/*.log
+
+fields:
+  id: microservice_2
+
+output.logstash:
+  hosts:
+    - ms-logging:5044
