@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-import java.util.Map;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,7 +35,7 @@ public class PingController {
         HttpHeaders headers1 = new HttpHeaders(headers);
         
 
-        HttpEntity entity = new HttpEntity<>(headers1);
+        HttpEntity<String> entity = new HttpEntity<>(headers1);
         System.out.println(headers1);
         return restTemplate.exchange("http://microservice2:8091/ms2/ping/other",HttpMethod.GET,entity,String.class);
         

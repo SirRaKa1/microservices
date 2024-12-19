@@ -1,0 +1,50 @@
+services:
+  microservice_auth:
+    container_name: microservice-auth
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_auth:5432/db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SERVER_PORT=8092
+    networks:
+      - network
+      - microservice_auth
+    volumes:
+      - auth-logs:/opt/app/log
+  postgresql:
+    container_name: postgresql_auth
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+    networks:
+      - microservice_auth
+  filebeat:
+    container_name: filebeat_auth
+    image: docker.elastic.co/beats/filebeat:8.15.2
+    entrypoint: filebeat -e -strict.perms=false
+    user: root
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - auth-logs:/var/app/log
+    networks:
+      - network
+
+volumes:
+  auth-logs:
+
+
+networks:
+  microservice_auth:
+    external: false
+  network:
+    external: true
